@@ -138,59 +138,51 @@ function loadData() {
 
 // 이벤트 리스너 설정
 function setupEventListeners() {
-    // 다크모드 토글
-    darkModeToggle.addEventListener('click', toggleDarkMode);
-    
-    // 프로젝트 관련
-    addProjectBtn.addEventListener('click', openProjectModal);
-    cancelProjectBtn.addEventListener('click', closeProjectModal);
+    // 이벤트 디리게이션 사용
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('#darkModeToggle')) {
+            toggleDarkMode();
+        } else if (e.target.closest('#addProjectBtn')) {
+            openProjectModal();
+        } else if (e.target.closest('#cancelProjectBtn')) {
+            closeProjectModal();
+        } else if (e.target.closest('#addSkillBtn')) {
+            addSkill();
+        } else if (e.target.closest('#toggleEditMode')) {
+            toggleProfileEditMode();
+        }
+    });
+
+    // 폼 제출 이벤트
     projectForm.addEventListener('submit', handleProjectSubmit);
-    projectFilter.addEventListener('change', filterProjects);
-    projectSort.addEventListener('change', sortProjects);
-    
-    // 파일 업로드 관련
-    uploadBtn.addEventListener('click', () => projectFileUpload.click());
-    projectFileUpload.addEventListener('change', handleFileUpload);
     
     // 드래그 앤 드롭 이벤트
     dropZone.addEventListener('dragover', handleDragOver);
-    dropZone.addEventListener('drop', handleDrop);
     dropZone.addEventListener('dragenter', handleDragEnter);
     dropZone.addEventListener('dragleave', handleDragLeave);
+    dropZone.addEventListener('drop', handleDrop);
     
-    // 스킬 관련
-    addSkillBtn.addEventListener('click', addSkill);
-    newSkillInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            addSkill();
-        }
-    });
-    skillColorBtn.addEventListener('click', openSkillColorModal);
+    // 필터 및 정렬 이벤트
+    projectFilter.addEventListener('change', filterProjects);
+    projectSort.addEventListener('change', sortProjects);
     
-    // 프로필 편집 모드 토글
-    toggleEditMode.addEventListener('click', toggleProfileEditMode);
-    
-    // 프로필 입력 필드 변경 감지
+    // 프로필 입력 필드들에 이벤트 리스너 추가
     Object.values(profileInputs).forEach(input => {
-        input.addEventListener('input', updateProfileInitials);
+        input.addEventListener('input', debounce(saveProfileData, 300));
     });
-    
-    // 모달 외부 클릭 시 닫기
-    projectModal.addEventListener('click', function(e) {
-        if (e.target === projectModal) {
-            closeProjectModal();
-        }
-    });
-    
-    skillColorModal.addEventListener('click', function(e) {
-        if (e.target === skillColorModal) {
-            closeSkillColorModal();
-        }
-    });
-    
-    projectDetailModal.addEventListener('click', function(e) {
-        if (e.target === projectDetailModal) {
-            closeProjectDetailModal();
+
+    // 프로젝트 그리드 이벤트 디리게이션
+    projectsGrid.addEventListener('click', (e) => {
+        const projectCard = e.target.closest('.project-card');
+        if (projectCard) {
+            const projectId = projectCard.dataset.id;
+            if (e.target.closest('.edit-project')) {
+                editProject(projectId);
+            } else if (e.target.closest('.delete-project')) {
+                deleteProject(projectId);
+            } else {
+                openProjectDetail(projectId);
+            }
         }
     });
 }

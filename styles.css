@@ -60,37 +60,42 @@
     }
 }
 
-/* 프로젝트 카드 호버 효과 */
+/* 프로젝트 카드 호버 효과 최적화 */
 .project-card {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s linear;
     transform: translateY(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
 }
 
 .project-card:hover {
-    transform: translateY(-8px) scale(1.02);
+    transform: translateY(-4px) scale(1.01);
+    opacity: 0.98;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 10px 20px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* 스킬 태그 애니메이션 */
+/* 스킬 태그 애니메이션 최적화 */
 .skill-tag {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     transform: translateY(0);
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .skill-tag:hover {
-    transform: translateY(-2px) scale(1.05);
+    transform: translateY(-1px) scale(1.02);
     box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* 모달 애니메이션 */
+/* 모달 애니메이션 최적화 */
 .modal-enter {
-    animation: modalEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: modalEnter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes modalEnter {
     from {
         opacity: 0;
-        transform: scale(0.95) translateY(-20px);
+        transform: scale(0.98) translateY(-5px);
     }
     to {
         opacity: 1;
